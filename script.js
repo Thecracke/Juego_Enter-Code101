@@ -8,9 +8,9 @@ const tarjeta = document.getElementById('game-card');
 
 console.log("Elementos encontrados:", inputIntento);
 
-function mostrarMensaje(texto, color){
+function mostrarMensaje(texto, color) {
     mensaje.textContent = texto;
-    mensaje.style.color = color;  
+    mensaje.style.color = color;
 }
 mostrarMensaje("Bienvenido al juego ", "#e94560");
 
@@ -23,10 +23,10 @@ console.log("(Debug) Numero secreto:", numeroSecreto);
 function verificar_intento() {
     let valor =Number(inputIntento.value);
 
-    if (isNaN(valor) || valor < 1 || valor > 100){
-        mostrarMensaje("Por favor ingrese un número válido entre 1 y 100", "red");
-        return;  
-    }
+    if (isNaN(valor) || valor < 1 || valor > 100) {
+    mostrarMensaje('⚠️ Ingresa un número del 1 al 100', 'orange');
+    return;
+}
 
 intentos++;
 contador.textContent = "Intentos:" + intentos;
@@ -34,20 +34,23 @@ contador.textContent = "Intentos:" + intentos;
 historialIntentos.push(valor);
 historial.textContent = "Historial: " + historialIntentos.join(", ");
 
-if(valor === numeroSecreto){
-    mostrarMensaje("Correcto era el " + numeroSecreto, "green");
+if (valor === numeroSecreto) {
+    mostrarMensaje('🎉 ¡Correcto! Era el ' + numeroSecreto, '#00ff88');
+
     btnAdivinar.disabled = true;
-    btnReiniciar.style.display = "inline-block";
-    tarjeta.style.backgroundColor = "#4CAF50";
-    tarjeta.style.boxShadow = "0 0 40px rgba(0, 255, 136, 0.3)"; 
+    btnReiniciar.style.display = 'inline-block';
+    // Celebración visual: la tarjeta brilla verde
+    tarjeta.style.borderColor = '#00ff88';
+    tarjeta.style.boxShadow = '0 0 40px rgba(0, 255, 136, 0.3)';
+
+} else if (valor > numeroSecreto) {
+    mostrarMensaje('📈 Muy alto. Intenta más bajo.', '#ff6b6b');
+    mensaje.textContent += " " + obtenerPista(valor, numeroSecreto);
+} else {
+    mostrarMensaje('📉 Muy bajo. Intenta más alto.', '#4ecdc4');
+    mensaje.textContent += " " + obtenerPista(valor, numeroSecreto);
 }
-else if(valor > numeroSecreto){
-    console.log(obtenerPista(valor,numeroSecreto));
-    mostrarMensaje("El numero es muy alto intenta mas bajo", "blue"); 
-}else{
-    console.log(obtenerPista(valor,numeroSecreto));
-    mostrarMensaje("El numero es muy bajo intenta mas alto", "blue");
-}
+
 inputIntento.value = "";
 inputIntento.focus();
 }
@@ -68,18 +71,18 @@ function reiniciar_juego() {
     console.log("(Debug) Numero secreto:", numeroSecreto);
 }
 
-function obtenerPista(valor, numeroSecreto) {
-    let diferencia = Math.abs(valor - numeroSecreto);
-    if (diferencia <=5) {
-        return '!Muy Cerca¡'
-    }
-    else if (diferencia <=15)
-    {
-        return 'Caliente'
-    }
-    else {
-        return 'Frio'
-    }
+function obtenerPista(intento, secreto) {
+let diferencia = Math.abs(intento - secreto);
+
+if (diferencia <= 5) {
+    return '🔥 ¡Muy cerca!';
+} else if (diferencia <= 15) {
+    return '♨️ Caliente';
+} else if (diferencia <= 30) {
+    return '🌤️ Tibio';
+} else {
+    return '❄️ Frío';
+}
 }
 
 btnReiniciar.addEventListener("click", reiniciar_juego);
